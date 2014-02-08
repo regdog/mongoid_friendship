@@ -28,7 +28,7 @@ module Mongoid
     def request_friendship(user) 
       return false if friendshiped_with?(user) or user == self or blocked?(user)
       pending_friend_ids << user.id
-      user.requested_friend_ids << user.id
+      user.requested_friend_ids << self.id
       self.save && user.save
     end
 
