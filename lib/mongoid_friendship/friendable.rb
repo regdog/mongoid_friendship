@@ -51,6 +51,7 @@ module Mongoid
     	friends << self
     end
 
+    # returns the list of approved friends
     def friends
       self.direct_friends | self.inverse_friends
     end
@@ -71,6 +72,7 @@ module Mongoid
       self.class.find(requested_friend_ids)
     end
 
+     # return the list of the ones among its friends which are also friend with the given use
     def common_friends_with(user)
       self.friends & user.friends
     end
@@ -135,9 +137,25 @@ module Mongoid
     def blocked?(user)
       (blocked_direct_friend_ids + blocked_inverse_friend_ids + blocked_requested_friend_ids).include?(user.id) or user.blocked_requested_friend_ids.include?(self.id)
     end
+
+    def friend_with?(user)
+      return false if user == self
+      (direct_friend_ids | inverse_friend_ids).include?(user.id)
+    end
+
     # checks if a current user is connected to given user
     def connected_with?(user)
       friendshiped_with?(user)	
+    end
+
+    # checks if a current user received invitation from given user
+    def reqeusted_friendship_by(user)
+      user.direct_friend_ids.include?(self.id) or user.pending_friend_ids.include?(self.id)
+    end
+
+    # checks if a current user invited given user
+    def requested?(user)
+      self.direct_friend_ids.include?(user.id) or self.pending_friend_ids.include?(user.id)
     end
 
     # check if any friendship exists with another user
@@ -158,6 +176,7 @@ module Mongoid
       self.save && user.save
     end
 
+    # deletes all the friendships
     def delete_all_friendships
       direct_friend_ids.clear
       inverse_friend_ids.clear
