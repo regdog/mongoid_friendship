@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = MongoidFriendship::VERSION
   spec.authors       = ["Yang Wang"]
   spec.email         = ["sinoyang@gmail.com"]
+  spec.homepage      = 'https://github.com/regdog/mongoid_friendship'
   spec.description   = %q{make friends among users}
   spec.summary       = %q{Ability to make a two way friendship}
   spec.homepage      = ""
