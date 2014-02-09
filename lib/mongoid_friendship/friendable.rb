@@ -13,17 +13,6 @@ module Mongoid
       base.field :blocked_requested_friend_ids, type: Array, default: []
     end
 
-    # attr_accessible(
-    #     :direct_friend_ids,
-    #     :inverse_friend_ids,
-    #     :pending_friend_ids,
-    #     :requested_friend_ids,
-    #     :blocked_direct_friend_ids,
-    #     :blocked_inverse_friend_ids,
-    #     :blocked_pending_friend_ids,
-    #     :blocked_requested_friend_ids,
-    # )
-
     # request a user to become a friend. If the operation succeeds, the method returns true, else false
     def request_friendship(user) 
       return false if friendshiped_with?(user) or user == self or blocked?(user)
@@ -38,7 +27,7 @@ module Mongoid
       requested_friend_ids.delete(user.id)
       user.pending_friend_ids.delete(self.id)
       inverse_friend_ids << user.id
-      user.direct_friends << self.id
+      user.direct_friend_ids << self.id
       self.save && user.save
     end
 
