@@ -35,11 +35,6 @@ module Mongoid
       direct_friend_ids | inverse_friend_ids
     end
 
-    # returns all friends plus me
-    def friendcicle
-    	friends << self
-    end
-
     # returns the list of approved friends
     def friends
       self.direct_friends | self.inverse_friends
@@ -64,6 +59,14 @@ module Mongoid
      # return the list of the ones among its friends which are also friend with the given use
     def common_friends_with(user)
       self.friends & user.friends
+    end
+
+    # returns all common friend ids including user and me
+    def common_friend_ids_with(user)
+      users = common_friends_with(user)
+      users << self
+      users << user
+      users.map(&:id).uniq
     end
 
     def ignore_friendship_reqeust(user)
